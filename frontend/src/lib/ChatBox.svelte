@@ -94,6 +94,7 @@
     margin: 24px;
     background: var(--primary-light1);
     border-radius: 36px;
+    z-index: 20;
 
     display: flex;
     flex-direction: column;

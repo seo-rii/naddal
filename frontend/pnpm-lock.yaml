@@ -14,6 +14,9 @@ importers:
       nunui:
         specifier: ^0.0.121
         version: 0.0.121(@lezer/common@1.2.1)(svelte@4.2.18)
+      uuid:
+        specifier: ^10.0.0
+        version: 10.0.0
     devDependencies:
       '@fontsource/fira-mono':
         specifier: ^4.5.10
@@ -1145,6 +1148,10 @@ packages:
 
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
+
+  uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    hasBin: true
 
   vite@5.3.3:
     resolution: {integrity: sha512-NPQdeCU0Dv2z5fu+ULotpuq5yfCS1BzKUIPhNbP3YBfAMGJXbt2nS+sbTFu+qchaqWTD+H3JK++nRwr6XIcp6A==}
@@ -2345,6 +2352,8 @@ snapshots:
   typescript@5.5.3: {}
 
   uc.micro@2.1.0: {}
+
+  uuid@10.0.0: {}
 
   vite@5.3.3(sass@1.77.6):
     dependencies:

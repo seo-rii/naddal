@@ -24,6 +24,7 @@
 	"type": "module",
 	"dependencies": {
 		"@seorii/tiptap": "^0.2.18",
-		"nunui": "^0.0.121"
+		"nunui": "^0.0.121",
+		"uuid": "^10.0.0"
 	}
 }

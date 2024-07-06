@@ -3,11 +3,13 @@
     import Toolbar from "$lib/Toolbar.svelte";
     import {onMount, tick} from "svelte";
     import TipTap from "@seorii/tiptap"
+    // @ts-ignore
+    import {v4 as uuid} from "uuid";
 
     let editable = false;
 
 
-    let raw = text, container;
+    let raw = text, _raw = false, container, editor, marks = [];
     let result: Section[] = [];
 
     type Section = {
@@ -45,20 +47,45 @@
         if (JSON.stringify(sections) !== JSON.stringify(result)) result = sections;
     }
 
-    $: container && parseSection(container);
+    $: parseSection(container);
+    let lock = Date.now(), scrollY;
 
     onMount(() => {
         const intv = setInterval(() => {
-            parseSection(container);
+            if (lock < Date.now()) parseSection(container);
         }, 1000);
         return () => clearInterval(intv);
     })
+
+    async function update(raw) {
+        _raw = raw;
+        await tick();
+        if (!container) return;
+        const _marks = Array.from(container.querySelectorAll('mark')).map(i => {
+            const id = uuid();
+            return {
+                id,
+                preview: i.textContent,
+            }
+        })
+        marks = _marks;
+    }
+
+    $: if (_raw !== raw) {
+        update(raw);
+    }
+
+    $: {
+        let _ = scrollY;
+        lock = Date.now() + 100;
+    }
 </script>
 
+<svelte:window bind:scrollY/>
 <Toolbar sections={result} bind:editable/>
 
 <main bind:this={container}>
-    <TipTap body={raw} mark {editable}/>
+    <TipTap bind:body={raw} mark {editable}/>
 </main>
 
 <style lang="scss">

@@ -10,7 +10,7 @@
 
     export let editable;
     export let setting, sections: Section[];
-    let scrollY;
+    let scrollY, active = [];
 
     function getActiveSection(sections: Section[], scrollY: number): Section[] {
         if (sections.length === 0) return [];
@@ -25,7 +25,7 @@
         return [activeSection];
     }
 
-    $: active = getActiveSection(sections, scrollY);
+    $: if(sections?.length) active = getActiveSection(sections, scrollY);
 </script>
 
 <svelte:window bind:scrollY/>
