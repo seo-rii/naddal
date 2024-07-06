@@ -53,17 +53,15 @@
 
   main {
     color: var(--on-surface);
+    min-height: 100%;
+    position: relative;
 
     &.leftNav {
       margin-left: var(--nav);
 
       div {
         padding: 12px;
-
-        & > :global(main) {
-          animation: fade 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          padding: 0 12px;
-        }
+        min-height: calc(100vh - 24px);
       }
     }
   }

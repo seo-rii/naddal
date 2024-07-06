@@ -188,7 +188,7 @@
   nav {
     position: fixed;
     background: var(--primary-light2);
-    color: var(--on-primary);
+    color: var(--on-surface);
     z-index: 101;
 
     &.leftNav .menu {
