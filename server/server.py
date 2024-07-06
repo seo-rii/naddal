@@ -4,7 +4,7 @@ from typing import Union, List
 
 from dotenv import load_dotenv
 import oracledb
-from utils import generate_embeddings, inference
+from utils import inference
 from paper_handler import chat, get_paper_list
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware

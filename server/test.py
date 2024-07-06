@@ -16,14 +16,29 @@ with open(pdf_file_path, "rb") as pdf_file:
     pdf_base64 = base64.b64encode(pdf_file.read()).decode("utf-8")
 
 # Prepare the JSON payload
-payload = {"file_name": "exam___ple.pdf", "file_data": pdf_base64}
+payload = {"file_data": pdf_base64, "file_name": "Attention Is All You Need"}
+
+url = "http://127.0.0.1:8000/api/paper"
+response = requests.post(
+    url, headers={"Content-Type": "application/json"}, data=json.dumps(payload)
+)
+print(response.status_code)
+print(response.json())
 
 # Define the URL of the FastAPI endpoint
-url = "http://127.0.0.1:8000/api/paper"
+url = "http://127.0.0.1:8000/api/chat"
 
 # Send the Get request
 # response = requests.get(url)
 # print(response.json())
+
+payload = {
+    "body": "what is your name?",
+    "refer": [
+        2,
+    ],
+}
+
 
 # Send the POST request
 response = requests.post(

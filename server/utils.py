@@ -65,7 +65,7 @@ def generate_embeddings(docs: List[Document], embedding_name, client):
     )
     splits = text_spliiter.split_documents(docs)
     for split in splits:
-        split.content = tag_remover(split.content)
+        split.page_content = tag_remover(split.page_content)
     unique_splits = []
     for split in splits:
         if split not in unique_splits and split.page_content != "":
@@ -73,15 +73,17 @@ def generate_embeddings(docs: List[Document], embedding_name, client):
 
     knowledge_base = OracleVS.from_documents(
         unique_splits,
-        UpstageEmbeddings(model="solar-embedding-1-large", api_key=api_key),
+        UpstageEmbeddings(
+            model="solar-embedding-1-large", api_key=os.environ["UPSTAGE_API_KEY"]
+        ),
         client=client,
-        table_name=f"{embedding_name}",
+        table_name=f"id{embedding_name}",
         distance_strategy=DistanceStrategy.DOT_PRODUCT,
     )
 
     print(
         f"""embedding saved in oracledb \n
-                table name: {embedding_name}"""
+                table name: id{embedding_name}"""
     )
 
     return knowledge_base
@@ -97,9 +99,9 @@ def inference(question, embedding_names):
     load_dotenv(find_dotenv())
     api_key = os.getenv("UPSTAGE_API_KEY")
 
-    username = os.getenv["DB_USER"]
-    password = os.getenv["DB_PASSWORD"]
-    dsn = os.getenv["DSN"]
+    username = os.getenv("DB_USER")
+    password = os.getenv("DB_PASSWORD")
+    dsn = os.getenv("DSN")
 
     try:
         conn23c = oracledb.connect(user=username, password=password, dsn=dsn)
@@ -126,15 +128,17 @@ def inference(question, embedding_names):
         # print(retriever)
         retrievers.append((retriever, name))
     # generate documents
+    print(retrievers)
     print("[[RETRIEVING RELEVANT DOCS...]]")
     context = ""
-    total_result = []
     for retriever in retrievers:
         result = retrieve(retriever[0], question)
 
         result = [(r.page_content, r.metadata) for r in result]
 
-        for idx in range(2):
+        print(result)
+
+        for idx in range(min(2, len(result))):
             refined_result = (
                 result[idx][0]
                 + f"from [{retriever[1]}, page number: {result[idx][1]['page']}]"
@@ -165,7 +169,7 @@ def inference(question, embedding_names):
     chat_prompt = ChatPromptTemplate.from_messages([system_msg, human_msg])
     model = ChatUpstage(api_key=api_key)
     chain = chat_prompt | model
-    truth, output = pass_answer(3, chain, question, context)
+    truth, output = pass_answer(3, chain, icl_examples, question, context)
     if not truth:
         return (
             "Sorry, we cannot find the related information. But we search about that. \n"

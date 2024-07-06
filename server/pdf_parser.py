@@ -28,7 +28,7 @@ def pdf_parser(pdf_path: str, save_path: str = "./uploads") -> Tuple[int, str, l
                 f.write(image.data)
             image_list.append(f"{page_idx}_{image_idx}.png")
     # Dump texts
-    layzer = UpstageLayoutAnalysisLoader(pdf_path, output_type="html")
+    layzer = UpstageLayoutAnalysisLoader(pdf_path, output_type="html", split="page")
     docs = layzer.load()
 
     doc = docs[0]

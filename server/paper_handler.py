@@ -5,7 +5,7 @@ from typing import Union
 
 from pdf_parser import pdf_parser
 from type import ChatRequest, PDFRequest
-from utils import generate_embeddings
+from utils import generate_embeddings, inference
 
 
 def get_paper_list():
@@ -62,7 +62,7 @@ def upload_pdf(pdf_request: PDFRequest, client):
     id, paper_name, docs = pdf_parser(file_path)
 
     # Gen embedding
-    result = generate_embeddings(
+    generate_embeddings(
         docs=docs, embedding_name=str(id), client=client
     )  # TODO: Merge generate embeddings
     # Remove the PDF file
@@ -78,3 +78,6 @@ def upload_pdf(pdf_request: PDFRequest, client):
 
 def chat(chat_request: ChatRequest):
     question = chat_request.body
+    target_ids = [f"id{id}" for id in chat_request.refer]
+    inference_result = inference(question=question, embedding_names=target_ids)
+    return inference_result
