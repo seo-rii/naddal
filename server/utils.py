@@ -74,10 +74,11 @@ def generate_embeddings(docs: List[Document], embedding_name):
         chunk_size=1000, chunk_overlap=100, language=Language.HTML
     )
     splits = text_spliiter.split_documents(docs)
-    splits = [tag_remover(split.page_content) for split in splits]
+    for split in splits:
+        split.content = tag_remover(split.content)
     unique_splits = []
     for split in splits:
-        if split not in unique_splits:
+        if split not in unique_splits and split.page_content != "":
             unique_splits.append(split)
 
     knowledge_base = OracleVS.from_documents(
