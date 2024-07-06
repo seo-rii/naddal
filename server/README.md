@@ -1,3 +1,4 @@
+# 논문 API
 ## GET /paper
 
 paper 목록 리턴
@@ -48,5 +49,24 @@ paper 번역
     "abstract": "abstract",
     "raw": "korean html"
   }
+}
+```
+# 챗봇 API
+## POST /chat
+
+AI 응답
+
+request
+```json
+{
+  "body": "user request",
+  "refer": [1, 2, 3]
+}
+```
+
+response
+```json
+{
+  "body": "ai response"
 }
 ```
