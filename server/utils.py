@@ -1,4 +1,5 @@
 import os
+from typing import List
 from dotenv import load_dotenv, find_dotenv
 from langchain_chroma import Chroma
 from langchain_upstage import UpstageEmbeddings
@@ -27,39 +28,29 @@ def pdf_to_html(pdf_filepath):
 
 
 # generate function for generate embedding
-def generate_embeddings(pdf_filepath, embedding_name):
+def generate_embeddings(docs: List[Document], embedding_name):
     """
     Generate Embeddings for the given pdf, return 1 if success otherwise return 0
     """
-    load_dotenv(find_dotenv())
     api_key = os.getenv("UPSTAGE_API_KEY")
-    try:
-        layzer = UpstageLayoutAnalysisLoader(pdf_filepath, output_type="html")
-        docs = layzer.load()
-        # split text into text chunks
-        text_spliiter = RecursiveCharacterTextSplitter.from_language(
-            chunk_size=1000, chunk_overlap=100, language=Language.HTML
-        )
-        splits = text_spliiter.split_documents(docs)
-        splits = [tag_remover(split.page_content) for split in splits]
-        unique_splits = []
-        for split in splits:
-            if split not in unique_splits:
-                unique_splits.append(split)
-        persist_directory = f"./chroma_db/{embedding_name}/"
-        vectorstore = Chroma.from_documents(
-            documents=unique_splits,
-            ids=[doc.page_content for doc in unique_splits],
-            embedding=UpstageEmbeddings(
-                model="solar-embedding-1-large", api_key=api_key
-            ),
-            persist_directory=persist_directory,
-        )
-        print(f"embedding saved in ./chroma_db/{embedding_name}/")
-        return 1
-    except Exception as e:
-        print(e)
-        return 0
+    # split text into text chunks
+    text_spliiter = RecursiveCharacterTextSplitter.from_language(
+        chunk_size=1000, chunk_overlap=100, language=Language.HTML
+    )
+    splits = text_spliiter.split_documents(docs)
+    splits = [tag_remover(split.page_content) for split in splits]
+    unique_splits = []
+    for split in splits:
+        if split not in unique_splits:
+            unique_splits.append(split)
+    persist_directory = f"./chroma_db/{embedding_name}/"
+    vectorstore = Chroma.from_documents(
+        documents=unique_splits,
+        ids=[doc.page_content for doc in unique_splits],
+        embedding=UpstageEmbeddings(model="solar-embedding-1-large", api_key=api_key),
+        persist_directory=persist_directory,
+    )
+    print(f"embedding saved in ./chroma_db/{embedding_name}/")
 
 
 def inference(question, embedding_names):

@@ -6,8 +6,10 @@ from langchain_upstage import (
 )
 from pypdf import PdfReader
 
+from utils import generate_embeddings
 
-def pdf_parser(pdf_path: str, save_path: str = "./uploads") -> Tuple[int, str]:
+
+def pdf_parser(pdf_path: str, save_path: str = "./uploads") -> Tuple[int, str, list]:
     """Parse a PDF file and return the text."""
     paper_name = os.path.basename(pdf_path).split(".")[0]
     id = len(os.listdir(save_path))
@@ -46,9 +48,9 @@ def pdf_parser(pdf_path: str, save_path: str = "./uploads") -> Tuple[int, str]:
 
     with open(os.path.join(save_path, "parsed.html"), "w") as f:
         for doc in docs:
-            f.write(content)
+            f.write(doc.page_content)
 
-    return id, paper_name
+    return id, paper_name, docs
 
 
 def to_abs_path(rel_path: str) -> str:
@@ -58,8 +60,5 @@ def to_abs_path(rel_path: str) -> str:
 
 if __name__ == "__main__":
     # Example usage
-    pdf_parser(
-        to_abs_path(
-            "sample_pdfs/Language Models are Unsupervised Multitask Learners.pdf"
-        )
-    )
+    _, _, docs = pdf_parser("tmp/exam---ple.pdf")
+    generate_embeddings(docs, "example")

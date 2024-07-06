@@ -5,6 +5,7 @@ from typing import Union
 
 from pdf_parser import pdf_parser
 from type import PDFRequest
+from utils import generate_embeddings
 
 
 def get_paper_list():
@@ -42,19 +43,6 @@ def get_paper_by_id(paper_id: int, save_path: str = "./uploads") -> Union[dict, 
     return None
 
 
-def generate_embeddings(pdf_filepath, embedding_name):
-    """
-    Generate Embeddings for the given pdf, return 1 if success otherwise return 0
-    params
-    - pdf_filepath (base64_url): a string which is encoded from pdf
-    - embedding_name (str): the name of the embedding
-    """
-    with open(f"./pdfs/{embedding_name}.pdf", "wb") as f:
-        f.write(codecs.decode(pdf_filepath, "base64"))
-    pdf_filepath = f"./pdfs/{embedding_name}.pdf"
-    print(f"your pdf file is in {pdf_filepath}")
-
-
 def upload_pdf(pdf_request: PDFRequest):
     # Decode the base64 file data
     file_data = base64.b64decode(pdf_request.file_data)
@@ -71,8 +59,10 @@ def upload_pdf(pdf_request: PDFRequest):
         pdf_file.write(file_data)
 
     # Parse the PDF file
-    id, paper_name = pdf_parser(file_path)
+    id, paper_name, docs = pdf_parser(file_path)
 
+    # Gen embedding
+    # result = generate_embeddings(docs=docs, embedding_name=str(id)) # TODO: Merge generate embeddings
     # Remove the PDF file
     os.remove(file_path)
 

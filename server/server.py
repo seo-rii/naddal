@@ -1,6 +1,8 @@
 import base64
 import os
 from typing import Union, List
+
+from dotenv import load_dotenv
 from utils import generate_embeddings, inference
 from paper_handler import get_paper_list
 from fastapi import FastAPI, HTTPException, Query
@@ -8,6 +10,7 @@ from paper_handler import upload_pdf, get_paper_by_id
 from type import PDFRequest
 
 app = FastAPI()
+load_dotenv("../.env")
 
 
 @app.get("/")
@@ -45,7 +48,7 @@ def get_paper(paper_id: str):
 
 
 @app.post("/api/paper")
-def decode_pdf(pdf_request: PDFRequest):
+def post_paper(pdf_request: PDFRequest):
     try:
         result = upload_pdf(pdf_request=pdf_request)
         return result
