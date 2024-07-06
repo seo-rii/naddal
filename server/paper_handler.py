@@ -4,7 +4,7 @@ import os
 from typing import Union
 
 from pdf_parser import pdf_parser
-from type import PDFRequest
+from type import ChatRequest, PDFRequest
 from utils import generate_embeddings
 
 
@@ -72,3 +72,7 @@ def upload_pdf(pdf_request: PDFRequest):
         "title": paper_name,
         "abstract": "Unknown",
     }
+
+
+def chat(chat_request: ChatRequest):
+    pass
