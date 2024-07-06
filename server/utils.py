@@ -43,14 +43,14 @@ Dehghani, M., Gouws, S., Vinyals, O., Uszkoreit, J., and Kaiser,Ł . Universal t
 Attention mechanisms have become an integral part of compelling sequence modeling and transduc-tion models in various tasks, allowing modeling of dependencies without regard to their distance inthe input or output sequences [ 2 , 19 ]. In all but a few cases [ 27 ], however, such attention mechanismsare used in conjunction with a recurrent network. In this work we propose the Transformer, a model architecture eschewing recurrence and insteadrelying entirely on an attention mechanism to draw global dependencies between input and output.The Transformer allows for significantly more parallelization and can reach a new state of the art intranslation quality after being trained for as little as twelve hours on eight P100 GPUs. 2 Backgroundfrom [attention, page number: 2]
 
 Answer:
-Attention mechanism is an integral part of powerful sequence modeling and transduction models in various tasks, allowing modeling of dependencies without regard to their distance in the input or output sequences [1]. In this work, the Transformer model architecture is proposed, which relies entirely on an attention mechanism to draw global dependencies between input and output, allowing for significant parallelization and achieving a new state of the art in translation quality [1].
-In the context of BERT, the self-attention mechanism allows for fine-tuning and modeling of many downstream tasks by swapping out the appropriate inputs and outputs [2]. BERT unifies encoding and bidirectional cross attention between two sentences using the self-attention mechanism [2].
-In the context of GPT, fine-tuning is straightforward since the self-attention mechanism in the Transformer allows for modeling of many downstream tasks involving text pairs by independently encoding text pairs before applying bidirectional cross attention [3].
+Attention mechanism is an integral part of powerful sequence modeling and transduction models in various tasks, allowing modeling of dependencies without regard to their distance in the input or output sequences [1]. In this work, the Transformer model architecture is proposed, which relies entirely on an attention mechanism to draw global dependencies between input and output, allowing for significant parallelization and achieving a new state of the art in translation quality (1).
+In the context of BERT, the self-attention mechanism allows for fine-tuning and modeling of many downstream tasks by swapping out the appropriate inputs and outputs [2]. BERT unifies encoding and bidirectional cross attention between two sentences using the self-attention mechanism (2).
+In the context of GPT, fine-tuning is straightforward since the self-attention mechanism in the Transformer allows for modeling of many downstream tasks involving text pairs by independently encoding text pairs before applying bidirectional cross attention (3).
 
 References
-[1] attention (page number: 2)
-[2] bert (page number: 5)
-[3] gpt (page number: 10)
+(1) attention (page number: 2)
+(2) bert (page number: 5)
+(3) gpt (page number: 10)
 """
 
 
