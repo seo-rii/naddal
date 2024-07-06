@@ -1,0 +1,8 @@
+langchain
+langchain-upstage
+python-dotenv
+langchain-community
+openai
+fastapi
+langchain-chroma
+rank_bm25
