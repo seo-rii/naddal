@@ -1,21 +1,17 @@
-import itertools
 import os
 import re
+from typing import Tuple
 from langchain_upstage import (
     UpstageLayoutAnalysisLoader,
 )
-from langchain_chroma import Chroma
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from pypdf import PdfReader
-from PIL import Image
-import fitz
-import io
 
 
-def pdf_parser(pdf_path: str, save_path: str = "./uploads") -> str:
+def pdf_parser(pdf_path: str, save_path: str = "./uploads") -> Tuple[int, str]:
     """Parse a PDF file and return the text."""
     paper_name = os.path.basename(pdf_path).split(".")[0]
-    save_path = os.path.join(save_path, paper_name)
+    id = len(os.listdir(save_path))
+    save_path = os.path.join(save_path, f"{paper_name}_{id}")
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
@@ -51,6 +47,8 @@ def pdf_parser(pdf_path: str, save_path: str = "./uploads") -> str:
     with open(os.path.join(save_path, "parsed.html"), "w") as f:
         for doc in docs:
             f.write(content)
+
+    return id, paper_name
 
 
 def to_abs_path(rel_path: str) -> str:
