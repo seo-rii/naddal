@@ -55,20 +55,10 @@ References
 
 
 # generate function for generate embedding
-def generate_embeddings(docs: List[Document], embedding_name):
+def generate_embeddings(docs: List[Document], embedding_name, client):
     """
     Generate Embeddings for the given pdf, return 1 if success otherwise return 0
     """
-    api_key = os.getenv("UPSTAGE_API_KEY")
-    username = os.getenv["DB_USER"]
-    password = os.getenv["DB_PASSWORD"]
-    dsn = os.getenv["DSN"]
-
-    try:
-        conn23c = oracledb.connect(user=username, password=password, dsn=dsn)
-        print("Connection successful!", conn23c.version)
-    except Exception as e:
-        print("Connection failed!")
     # split text into text chunks
     text_spliiter = RecursiveCharacterTextSplitter.from_language(
         chunk_size=1000, chunk_overlap=100, language=Language.HTML
@@ -84,7 +74,7 @@ def generate_embeddings(docs: List[Document], embedding_name):
     knowledge_base = OracleVS.from_documents(
         unique_splits,
         UpstageEmbeddings(model="solar-embedding-1-large", api_key=api_key),
-        client=conn23c,
+        client=client,
         table_name=f"{embedding_name}",
         distance_strategy=DistanceStrategy.DOT_PRODUCT,
     )
