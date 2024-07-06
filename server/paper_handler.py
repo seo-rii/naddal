@@ -75,4 +75,4 @@ def upload_pdf(pdf_request: PDFRequest):
 
 
 def chat(chat_request: ChatRequest):
-    pass
+    question = chat_request.body

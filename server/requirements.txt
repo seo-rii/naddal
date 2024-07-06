@@ -6,3 +6,7 @@ openai
 fastapi
 langchain-chroma
 rank_bm25
+PyPDF2
+langchain-core
+langchain-text-splitters
+oracledb
