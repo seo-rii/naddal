@@ -5,14 +5,16 @@ paper 목록 리턴
 
 ```json
 {
-  "papers": [
-    {
-      "id": 1,
-      "title": "title",
-      "author": "author",
-      "abstract": "abstract"
-    }
-  ]
+  "data": {
+    "papers": [
+      {
+        "id": 1,
+        "title": "title",
+        "author": "author",
+        "abstract": "abstract"
+      }
+    ]
+  }
 }
 ```
 
@@ -26,12 +28,14 @@ paper 상세 리턴
 
 ```json
 {
-  "paper": {
-    "id": 1,
-    "title": "title",
-    "author": "author",
-    "abstract": "abstract",
-    "raw": "html"
+  "data": {
+    "paper": {
+      "id": 1,
+      "title": "title",
+      "author": "author",
+      "abstract": "abstract",
+      "raw": "html"
+    }
   }
 }
 ```
@@ -42,12 +46,14 @@ paper 번역
 
 ```json
 {
-  "paper": {
-    "id": 1,
-    "title": "title",
-    "author": "author",
-    "abstract": "abstract",
-    "raw": "korean html"
+  "data": {
+    "paper": {
+      "id": 1,
+      "title": "title",
+      "author": "author",
+      "abstract": "abstract",
+      "raw": "korean html"
+    }
   }
 }
 ```
@@ -67,6 +73,8 @@ request
 response
 ```json
 {
-  "body": "ai response"
+  "data": {
+    "body": "ai response"
+  }
 }
 ```
