@@ -12,3 +12,7 @@ export const navHeight = derived([leftNav], ([$leftNav]) => $leftNav ? 0 : 60);
 
 
 export const pageScroll = writable(0);
+
+export const viewerOption = savable('viewerOption', {
+    size: 16
+})
