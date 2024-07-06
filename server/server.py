@@ -1,14 +1,17 @@
 import base64
 import os
 from typing import Union, List
+
+from dotenv import load_dotenv
 from utils import generate_embeddings, inference
-from paper_handler import get_paper_list
+from paper_handler import chat, get_paper_list
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from paper_handler import upload_pdf, get_paper_by_id
-from type import PDFRequest
+from type import ChatRequest, PDFRequest
 
 app = FastAPI()
+load_dotenv("../.env")
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,9 +57,18 @@ def get_paper(paper_id: str):
 
 
 @app.post("/api/paper")
-def decode_pdf(pdf_request: PDFRequest):
+def post_paper(pdf_request: PDFRequest):
     try:
         result = upload_pdf(pdf_request=pdf_request)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/api/chat")
+def post_chat(chat_request: ChatRequest):
+    try:
+        result = chat(chat_request=chat_request)
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
