@@ -41,7 +41,7 @@ def pdf_parser(pdf_path: str, save_path: str = "./uploads") -> Tuple[int, str, l
 
         def insert_img_link(match):
             # Insert the image link into matched string
-            return match.group()[:-1] + f'src="{path}"' + match.group()[-1]
+            return match.group()[:-1] + f'src="/image/{id}/{path}"' + match.group()[-1]
 
         content = re.sub(img_tag_regex, insert_img_link, content, count=1)
     doc.page_content = content

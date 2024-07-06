@@ -9,6 +9,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from paper_handler import upload_pdf, get_paper_by_id
 from type import ChatRequest, PDFRequest
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 load_dotenv("../.env")
@@ -72,3 +73,14 @@ def post_chat(chat_request: ChatRequest):
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/image/{paper_id}/{image_name}")
+def get_image(paper_id: int, image_name: str):
+    result = get_paper_by_id(paper_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Paper not found")
+    image_path = f"./uploads/{result['title']}_{paper_id}/{image_name}"
+    print(image_path)
+    if not os.path.exists(image_path):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(image_path)
