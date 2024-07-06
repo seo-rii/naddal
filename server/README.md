@@ -22,6 +22,9 @@ paper 목록 리턴
 
 pdf base64로 업로드
 
+## PATCH /paper/:id
+paper HTML 수정
+
 ## GET /paper/:id
 
 paper 상세 리턴
@@ -76,5 +79,50 @@ response
   "data": {
     "body": "ai response"
   }
+}
+```
+
+# 마킹 API
+
+## GET /mark
+
+모든 논문 마킹 리스트
+
+```json
+{
+  "mark": [
+    {
+      "start": 0,
+      "end": 10,
+      "preview": "HTML"
+    },
+    {
+      "start": 20,
+      "end": 24,
+      "preview": "HTML 2"
+    }
+  ]
+}
+```
+
+## PATCH /mark/:id
+
+id번 논문 마킹 수정(없으면 생성)
+
+reqest
+```json
+{
+  "mark": [
+    {
+      "start": 0,
+      "end": 10,
+      "preview": "HTML"
+    },
+    {
+      "start": 20,
+      "end": 24,
+      "preview": "HTML 2"
+    }
+  ]
 }
 ```
