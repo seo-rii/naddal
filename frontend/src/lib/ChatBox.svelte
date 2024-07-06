@@ -1,8 +1,9 @@
 <script lang="ts">
     import {Button, CircularProgress, Icon, Input} from "nunui";
     import Expand from "$lib/Expand.svelte";
-    import {tick} from "svelte";
+    import {onMount, tick} from "svelte";
     import api from "$utils/api";
+    import {browser} from "$app/environment";
 
     async function getAnswer(question: string): Promise<string> {
         return (await api('/api/chat', {
@@ -41,6 +42,16 @@
         let _ = [showHistory];
         scrollToBottom();
     }
+
+    if (browser) onMount(() => {
+        const intv = setInterval(() => {
+            if (window.ask) {
+                value = window.ask;
+                window.ask = '';
+                ask();
+            }
+        }, 100);
+    })
 </script>
 
 <div style:height="{clientHeight + 12}px"></div>
@@ -68,7 +79,13 @@
                                     <Icon auto_awesome/>
                                 </div>
                                 {#if a}
-                                    {a}
+                                    {@const lines = a.split('[Output end]').map(i => i.split('참고문헌:')).flat().map(i => i.trim()).filter(i => i.length > 0)}
+                                    {#each lines as line, i}
+                                        <p>{line}</p>
+                                        {#if i < lines.length - 1}
+                                            <hr>
+                                        {/if}
+                                    {/each}
                                 {:else}
                                     <CircularProgress indeterminate size="24"/>
                                 {/if}
@@ -142,5 +159,11 @@
     overflow-y: auto;
     max-height: 50vh;
     scroll-behavior: smooth;
+  }
+
+  hr {
+    border: none;
+    border-top: solid 1px var(--secondary-light3);
+    margin: 12px 0;
   }
 </style>

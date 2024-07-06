@@ -15,7 +15,7 @@ import json
 from translation import translation
 
 app = FastAPI()
-load_dotenv("../.env")
+load_dotenv(".env")
 
 app.add_middleware(
     CORSMiddleware,

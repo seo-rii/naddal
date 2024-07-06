@@ -106,10 +106,14 @@
         translation = (await api('/api/translation', {raw: sel})).raw;
     }
 
+    async function ask() {
+        window.ask = sel + '에 대해서 설명해 줘.';
+    }
+
     let cont: HTMLElement;
     $: if (cont) {
         const intv = setInterval(() => {
-            const rect = cont.getBoundingClientRect();
+            const rect = cont && cont.getBoundingClientRect();
             if (!rect || rect.height === 0) {
                 clearInterval(intv);
                 showTranslation = false;
@@ -126,6 +130,7 @@
         <TipTap bind:body={raw} mark {editable} bubbleOverride={showTranslation}>
             <svelte:fragment slot="bubble">
                 <IconButton icon="translate" size="small" on:click={translate}/>
+                <IconButton icon="question_mark" size="small" on:click={ask}/>
             </svelte:fragment>
             <svelte:fragment slot="bubbleOverride">
                 <div bind:this={cont} style:min-height="1px"></div>
