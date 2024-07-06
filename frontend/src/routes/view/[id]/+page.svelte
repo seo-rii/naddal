@@ -60,6 +60,10 @@
 
 <style lang="scss">
   main {
+    :global(*) {
+      max-width: 100%;
+    }
+
     :global(h1) {
       position: sticky;
       top: 0;

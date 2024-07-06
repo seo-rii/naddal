@@ -49,17 +49,15 @@
 <style lang="scss">
   @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
-  :root {
-    --nav: 70px;
-  }
-
   main {
     color: var(--on-surface);
     min-height: 100%;
     position: relative;
+    --nav: 0px;
 
     &.leftNav {
       margin-left: var(--nav);
+      --nav: 70px;
 
       div {
         padding: 12px;
