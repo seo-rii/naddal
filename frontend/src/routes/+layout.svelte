@@ -4,6 +4,7 @@
     import Nav from "$lib/Nav.svelte";
     import {page} from "$app/stores";
     import {fly} from "svelte/transition";
+    import ChatBox from "$lib/ChatBox.svelte";
 
 
     let primary, secondary, surface, onSurface, onSecondary;
@@ -41,6 +42,7 @@
                 <slot/>
             </div>
         {/key}
+        <ChatBox/>
     </main>
 </ThemeProvider>
 

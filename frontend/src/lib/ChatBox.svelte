@@ -32,6 +32,7 @@
 
     let focus = false, value = '', showHistory = false, container: HTMLElement;
     let history = [['안녕하세요', '저는 케인입니다'], ['먼저 저의 말과', '행동으로 인해']];
+    let clientHeight;
 
     $: {
         let _ = [showHistory];
@@ -39,7 +40,8 @@
     }
 </script>
 
-<main>
+<div style:height="{clientHeight + 12}px"></div>
+<main bind:clientHeight>
     <Expand>
         {#if true}
             <div class="row" style="padding-bottom: 0">

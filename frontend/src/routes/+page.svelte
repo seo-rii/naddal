@@ -10,8 +10,9 @@
         <Button small outlined icon="attach_file">파일 업로드</Button>
         <Button small outlined icon="public">arxiv에서 가져오기</Button>
     </div>
+
+    <a href="/view/abc">test</a>
 </main>
-<ChatBox/>
 
 <style lang="scss">
   main {
