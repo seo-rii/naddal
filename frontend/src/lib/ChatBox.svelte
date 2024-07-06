@@ -83,7 +83,8 @@
         <Icon auto_awesome style="margin-right: 12px"/>
         <div class="input">
             <Input plain round fullWidth placeholder="아무거나 물어보세요!" trailingIcon="input" on:focus={() => focus = true}
-                   on:blur={() => setTimeout(() => focus = false, 10)} bind:value on:submit={ask}/>
+                   on:blur={() => setTimeout(() => focus = false, 10)} bind:value on:submit={ask}
+                   trailingHandler={ask}/>
         </div>
     </div>
 </main>

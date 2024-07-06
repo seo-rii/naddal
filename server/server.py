@@ -9,9 +9,10 @@ from paper_handler import chat, get_paper_list
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from paper_handler import upload_pdf, get_paper_by_id
-from type import ChatRequest, PDFRequest, MarkRequest, PaperPatchRequest
+from type import ChatRequest, PDFRequest, MarkRequest, PaperPatchRequest, TranslationApi
 from fastapi.responses import FileResponse
 import json
+from translation import translation
 
 app = FastAPI()
 load_dotenv("../.env")
@@ -143,3 +144,11 @@ def post_mark(paper_id: int, mark_request: MarkRequest):
     with open(mark_path, "w") as f:
         f.write(json.dumps(mark))
     return {"data": "success"}
+
+@app.post("/api/translation")
+def post_translation(translation_api: TranslationApi):
+    try:
+        result = translation(translation_api.raw)
+        return {"data": {"raw": result}}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

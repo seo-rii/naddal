@@ -23,7 +23,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@seorii/tiptap": "^0.2.18",
+		"@seorii/tiptap": "^0.2.20",
 		"nunui": "^0.0.121",
 		"uuid": "^10.0.0"
 	}

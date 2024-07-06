@@ -15,3 +15,6 @@ class ChatRequest(BaseModel):
 
 class MarkRequest(BaseModel):
     marks: list[Any]
+
+class TranslationApi(BaseModel):
+    raw: str
