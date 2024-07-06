@@ -4,7 +4,7 @@ from typing import Union, List
 from utils import generate_embeddings, inference
 from paper_handler import get_paper_list
 from fastapi import FastAPI, HTTPException, Query
-from paper_handler import upload_pdf
+from paper_handler import upload_pdf, get_paper_by_id
 from type import PDFRequest
 
 app = FastAPI()
@@ -28,6 +28,20 @@ def run_inference(question, names: List[str] = Query(...)):
 @app.get("/api/paper")
 def get_paper():
     return get_paper_list()
+
+
+@app.get("/api/paper/{paper_id}")
+def get_paper(paper_id: str):
+    try:
+        paper_id = int(paper_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Paper ID must be an integer")
+    result = get_paper_by_id(paper_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Paper not found")
+    result["author"] = "Unknown"
+    result["abstract"] = "Unknown"
+    return result
 
 
 @app.post("/api/paper")
