@@ -14,6 +14,9 @@ from langchain.prompts import (
 from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
 import re
 
+from ground_checker import pass_answer
+from smart_rag import smart_rag
+
 
 def tag_remover(html_content: str) -> str:
     """Remove html tags and extract only contents"""
@@ -114,5 +117,10 @@ def inference(question, embedding_names):
     chat_prompt = ChatPromptTemplate.from_messages([system_msg, human_msg])
     model = ChatUpstage(api_key=api_key)
     chain = chat_prompt | model
-    output = chain.invoke({"question": question, "context": context})
-    return output.content
+    truth, output = pass_answer(3, chain, question, context)
+    if not truth:
+        return (
+            "Sorry, we cannot find the related information. But we search about that. \n"
+            + smart_rag(chain, question, context)
+        )
+    return output
