@@ -1,8 +1,8 @@
 <script>
-    import ChatBox from "$lib/ChatBox.svelte";
     import {Button} from "nunui";
 </script>
 
+<title>낮달</title>
 <main>
     <h1>환영합니다!</h1>
 

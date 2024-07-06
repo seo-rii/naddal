@@ -1,8 +1,11 @@
 <script lang="ts">
     import text from "./text";
-    import {browser} from "$app/environment";
     import Toolbar from "$lib/Toolbar.svelte";
     import {onMount, tick} from "svelte";
+    import TipTap from "@seorii/tiptap"
+
+    let editable = false;
+
 
     let raw = text, container;
     let result: Section[] = [];
@@ -52,10 +55,10 @@
     })
 </script>
 
-<Toolbar sections={result}/>
+<Toolbar sections={result} bind:editable/>
 
 <main bind:this={container}>
-    {@html raw}
+    <TipTap body={raw} mark {editable}/>
 </main>
 
 <style lang="scss">
@@ -69,7 +72,7 @@
       top: 0;
       background: var(--surface);
       height: 46px;
-      z-index: 1;
+      z-index: 2;
 
       font-size: 2em;
       font-weight: 300;
@@ -78,6 +81,7 @@
     :global(h2) {
       position: sticky;
       top: 46px;
+      z-index: 1;
       background: var(--surface);
       font-size: 1.4em;
       font-weight: 300;

@@ -2,7 +2,7 @@
     import {page, navigating} from '$app/stores';
     import {leftNav, navHeight, theme} from '$stores/ui';
     import {fade} from 'svelte/transition';
-    import {IconButton, List, OneLine, CircularProgress} from 'nunui';
+    import {IconButton, List, OneLine, CircularProgress, Icon} from 'nunui';
     import {browser} from '$app/environment';
 
     $: links = [
@@ -85,7 +85,7 @@
         {#if !$leftNav}
             <IconButton icon="menu" on:click={() => (open = true)}/>
         {/if}
-        <a class="logo" href="/" on:mouseenter={() => (_overI = -1)}> </a>
+        <a class="logo" href="/" on:mouseenter={() => (_overI = -1)}><Icon icon="fluorescent" size="32"/></a>
         {#if $leftNav}
             {#each links as link, i}
                 <a
@@ -230,6 +230,9 @@
 
     .logo {
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     &.anim {

@@ -8,6 +8,7 @@
         children: Section[];
     }
 
+    export let editable;
     export let setting, sections: Section[];
     let scrollY;
 
@@ -31,6 +32,7 @@
 
 <main>
     <p style="margin: 0;padding-bottom: 6px;border-bottom: solid 1px var(--primary-light3)">
+        <IconButton icon="edit" size="small" on:click={() => editable = !editable} active={editable}/>
         <IconButton icon="translate" size="small" on:click={setting}/>
     </p>
     <Hoverable let:hovering>
