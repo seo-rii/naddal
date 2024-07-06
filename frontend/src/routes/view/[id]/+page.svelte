@@ -57,7 +57,7 @@
             if (lock < Date.now()) parseSection(container);
         }, 1000);
         api('/api/paper/' + data.id).then((data) => {
-            raw = data.raw;
+            raw = _raw = data.raw;
         });
         return () => clearInterval(intv);
     })
@@ -71,9 +71,12 @@
             return {
                 id,
                 preview: i.textContent,
+                paper: data.id,
             }
         })
         marks = _marks;
+        await api('/api/mark/' + data.id, {marks})
+        await api('/api/paper/' + data.id, {raw}, 'PATCH')
     }
 
     $: if (_raw !== raw) {
