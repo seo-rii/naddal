@@ -25,9 +25,9 @@ app.add_middleware(
 )
 
 api_key = os.getenv("UPSTAGE_API_KEY")
-username = os.getenv["DB_USER"]
-password = os.getenv["DB_PASSWORD"]
-dsn = os.getenv["DSN"]
+username = os.getenv("DB_USER")
+password = os.getenv("DB_PASSWORD")
+dsn = os.getenv("DSN")
 
 try:
     client = oracledb.connect(user=username, password=password, dsn=dsn)
