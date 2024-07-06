@@ -26,6 +26,7 @@
     async function scrollToBottom() {
         await tick();
         await new Promise(resolve => setTimeout(resolve, 10));
+        if (!container) return;
         container.scrollTop = container.scrollHeight;
     }
 
