@@ -70,7 +70,7 @@ def post_paper(pdf_request: PDFRequest):
 def post_chat(chat_request: ChatRequest):
     try:
         result = chat(chat_request=chat_request)
-        return result
+        return {"data": result}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

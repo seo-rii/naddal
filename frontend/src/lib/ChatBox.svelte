@@ -2,10 +2,13 @@
     import {Button, CircularProgress, Icon, Input} from "nunui";
     import Expand from "$lib/Expand.svelte";
     import {tick} from "svelte";
+    import api from "$utils/api";
 
     async function getAnswer(question: string): Promise<string> {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        return '실망을 드린';
+        return (await api('/api/chat', {
+            refer: [],
+            body: question,
+        })) || '답변이 없어요.';
     }
 
     function ask() {
@@ -31,7 +34,7 @@
     }
 
     let focus = false, value = '', showHistory = false, container: HTMLElement;
-    let history = [['안녕하세요', '저는 케인입니다'], ['먼저 저의 말과', '행동으로 인해']];
+    let history = [];
     let clientHeight;
 
     $: {
