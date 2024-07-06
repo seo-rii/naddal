@@ -1,0 +1,1 @@
+export const load = async ({params, url}: any) => ({url, id: params.id});
