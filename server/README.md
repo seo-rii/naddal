@@ -1,5 +1,5 @@
 # 논문 API
-## GET /paper
+## GET /paper Done
 
 paper 목록 리턴
 
@@ -18,14 +18,14 @@ paper 목록 리턴
 }
 ```
 
-## POST /paper
+## POST /paper Done
 
 pdf base64로 업로드
 
 ## PATCH /paper/:id
 paper HTML 수정
 
-## GET /paper/:id
+## GET /paper/:id Done
 
 paper 상세 리턴
 
