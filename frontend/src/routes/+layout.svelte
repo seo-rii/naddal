@@ -5,7 +5,12 @@
     import {page} from "$app/stores";
     import {fly} from "svelte/transition";
     import ChatBox from "$lib/ChatBox.svelte";
+    import {browser} from "$app/environment";
+    import api from "$utils/api";
+    import {global as globalStore} from "$utils/state";
+    import Snack from "$lib/Snack.svelte";
 
+    const snack = globalStore("snack", {});
 
     let primary, secondary, surface, onSurface, onSecondary;
     $: {
@@ -14,6 +19,11 @@
         } else {
             [primary, secondary, surface, onSurface, onSecondary] = ["#2c2963", "#514daf", "#eff2f6", "#13131f", "#13131f"];
         }
+    }
+
+    if (browser) {
+        window.api = api;
+        window.snack = snack;
     }
 </script>
 
@@ -36,6 +46,7 @@
 <svelte:window bind:innerWidth={$windowWidth} bind:scrollY={$pageScroll}/>
 <ThemeProvider {primary} {secondary} {surface} {onSurface} {onSecondary}>
     <Nav/>
+    <Snack/>
     <main class:leftNav={$leftNav} style:padding-top="{$navHeight}px">
         {#key $page.url.toString()}
             <div in:fly={{y: 10}}>

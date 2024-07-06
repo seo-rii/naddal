@@ -3,7 +3,7 @@ import {tick} from "svelte";
 //@ts-ignore
 import {get_current_component} from "svelte/internal";
 
-export const endpoint = import.meta.env.DEV ? 'http://localhost:2000' : 'https://test.com'
+export const endpoint = import.meta.env.DEV ? 'http://localhost:8000' : 'https://test.com'
 
 export default function api(path: string, data: any = undefined, method = 'POST'): Promise<any> {
     if (!browser) return new Promise<{ data: any }>(() => null)
@@ -30,6 +30,9 @@ export default function api(path: string, data: any = undefined, method = 'POST'
             body: data ? JSON.stringify(data) : undefined,
             redirect: 'follow',
             referrerPolicy: 'no-referrer',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         }).then((res) => res.json()).then((res) => {
             if (import.meta.env.DEV) {
                 if (!path.startsWith('/gets')) console.log('API Request', path, res)

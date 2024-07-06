@@ -26,7 +26,7 @@
 <script lang="ts">
     import {createEventDispatcher, onMount, setContext, tick} from "svelte";
     import {type Writable, writable} from "svelte/store";
-    import Skeleton from "$$/Skeleton.svelte";
+    import Skeleton from "$lib/Skeleton.svelte";
 
     export let type: string = Object.keys($$restProps)[0], defaultValue = {};
 

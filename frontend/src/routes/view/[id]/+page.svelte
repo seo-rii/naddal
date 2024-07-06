@@ -5,11 +5,13 @@
     import TipTap from "@seorii/tiptap"
     // @ts-ignore
     import {v4 as uuid} from "uuid";
+    import api from "$utils/api";
+
+    export let data;
 
     let editable = false;
 
-
-    let raw = text, _raw = false, container, editor, marks = [];
+    let raw = '', _raw = '', container, editor, marks = [];
     let result: Section[] = [];
 
     type Section = {
@@ -54,6 +56,9 @@
         const intv = setInterval(() => {
             if (lock < Date.now()) parseSection(container);
         }, 1000);
+        api('/api/paper/' + data.id).then((data) => {
+            raw = data.raw;
+        });
         return () => clearInterval(intv);
     })
 
@@ -85,7 +90,9 @@
 <Toolbar sections={result} bind:editable/>
 
 <main bind:this={container}>
-    <TipTap bind:body={raw} mark {editable}/>
+    {#if raw}
+        <TipTap bind:body={raw} mark {editable}/>
+    {/if}
 </main>
 
 <style lang="scss">

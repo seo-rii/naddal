@@ -4,15 +4,24 @@ from typing import Union, List
 from utils import generate_embeddings, inference
 from paper_handler import get_paper_list
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from paper_handler import upload_pdf, get_paper_by_id
 from type import PDFRequest
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"data": {"Hello": "World"}}
 
 
 @app.get("/api/generate_embeddings/{filepath:path}/{embedding_name}")
@@ -22,12 +31,12 @@ def generate_embed(filepath, embedding_name: str):
 
 @app.get("/api/inference/{question}")
 def run_inference(question, names: List[str] = Query(...)):
-    return {"output": inference(question=question, embedding_names=names)}
+    return {"data":{"output": inference(question=question, embedding_names=names)}}
 
 
 @app.get("/api/paper")
 def get_paper():
-    return get_paper_list()
+    return {"data":{"list":get_paper_list()}}
 
 
 @app.get("/api/paper/{paper_id}")
@@ -41,7 +50,7 @@ def get_paper(paper_id: str):
         raise HTTPException(status_code=404, detail="Paper not found")
     result["author"] = "Unknown"
     result["abstract"] = "Unknown"
-    return result
+    return {"data":result}
 
 
 @app.post("/api/paper")
