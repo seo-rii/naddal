@@ -8,7 +8,7 @@
     async function getAnswer(question: string): Promise<string> {
         return (await api('/api/chat', {
             refer: [],
-            body: question,
+            body: (title ? `${title} 논문을 특히 참고하여 대답해 줘. ` : '') + question,
         })) || '답변이 없어요.';
     }
 
@@ -36,7 +36,7 @@
 
     let focus = false, value = '', showHistory = false, container: HTMLElement;
     let history = [];
-    let clientHeight;
+    let clientHeight, title;
 
     $: {
         let _ = [showHistory];
@@ -50,6 +50,7 @@
                 window.ask = '';
                 ask();
             }
+            title = window.title;
         }, 100);
     })
 </script>
@@ -60,7 +61,13 @@
         {#if true}
             <div class="row" style="padding-bottom: 0">
                 <div style="width: 24px"></div>
-                <Button small outlined>전체 파일 참고</Button>
+                <Button small outlined>
+                    {#if title}
+                        {title} 논문 위주 참고
+                    {:else}
+                        전체 파일 참고
+                    {/if}
+                </Button>
                 <Button small outlined={!showHistory} on:click={() => showHistory = !showHistory} icon="history">대화 내역
                 </Button>
             </div>
@@ -79,7 +86,7 @@
                                     <Icon auto_awesome/>
                                 </div>
                                 {#if a}
-                                    {@const lines = a.split('[Output end]').map(i => i.split('참고문헌:')).flat().map(i => i.trim()).filter(i => i.length > 0)}
+                                    {@const lines = a.split('[Output end]').map(i => i.split('참고문헌')).flat().map(i => i.trim()).filter(i => i.length > 0)}
                                     {#each lines as line, i}
                                         <p>{line}</p>
                                         {#if i < lines.length - 1}

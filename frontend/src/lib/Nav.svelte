@@ -12,6 +12,11 @@
             path: '/'
         },
         {
+            icon: 'highlight',
+            text: '하이라이트',
+            path: '/mark'
+        },
+        {
             icon: {auto: 'autopay', light: 'light_mode', dark: 'dark_mode'}[$theme],
             text: {auto: '자동 테마', light: '밝은 테마', dark: '다크 테마'}[$theme],
             handler: () => {

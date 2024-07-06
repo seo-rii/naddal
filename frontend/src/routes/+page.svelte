@@ -4,6 +4,8 @@
     import {selectFile} from "$utils/file";
     import newSnack from "$utils/snack";
     import {refresh} from "$utils/api";
+    import {browser} from "$app/environment";
+    import {onMount} from "svelte";
 
     async function upload() {
         const {name, blob} = await selectFile();

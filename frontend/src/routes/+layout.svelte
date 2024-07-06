@@ -25,6 +25,11 @@
         window.api = api;
         window.snack = snack;
     }
+
+    $: if (browser) {
+        let _ = $page.url.pathname;
+        window.title = '';
+    }
 </script>
 
 <svelte:head>

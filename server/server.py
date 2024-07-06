@@ -133,7 +133,7 @@ def get_all_mark():
             st = f.read()
             js = json.loads(st)
             mark_list += js
-    return mark_list
+    return {"data": {"list": mark_list}}
 
 @app.post("/api/mark/{paper_id}")
 def post_mark(paper_id: int, mark_request: MarkRequest):

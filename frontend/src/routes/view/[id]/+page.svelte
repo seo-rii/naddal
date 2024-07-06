@@ -13,7 +13,7 @@
     let editable = false;
 
     let raw = '', _raw = '', container, editor, marks = [];
-    let result: Section[] = [];
+    let result: Section[] = [], title;
 
     type Section = {
         title: string;
@@ -65,6 +65,7 @@
         }, 100)
         api('/api/paper/' + data.id).then((data) => {
             raw = _raw = data.raw;
+            window.title = data.title;
         });
         return () => {
             clearInterval(intv);
