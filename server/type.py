@@ -6,12 +6,16 @@ class PDFRequest(BaseModel):
     file_name: str
     file_data: str  # Base64 encoded string
 
+
 class PaperPatchRequest(BaseModel):
     raw: str
 
+
 class ChatRequest(BaseModel):
+    id: int
     body: str
     refer: list[int]
+
 
 class MarkRequest(BaseModel):
     marks: list[Any]

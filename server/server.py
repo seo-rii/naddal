@@ -9,6 +9,7 @@ from paper_handler import chat, get_paper_list
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from paper_handler import upload_pdf, get_paper_by_id
+from chat_handler import get_chat_list
 from type import ChatRequest, PDFRequest, MarkRequest, PaperPatchRequest
 from fastapi.responses import FileResponse
 import json
@@ -29,11 +30,11 @@ username = os.getenv("DB_USER")
 password = os.getenv("DB_PASSWORD")
 dsn = os.getenv("DSN")
 
-try:
-    client = oracledb.connect(user=username, password=password, dsn=dsn)
-    print("Connection successful!", client.version)
-except Exception as e:
-    print("Connection failed!")
+# try:
+#     client = oracledb.connect(user=username, password=password, dsn=dsn)
+#     print("Connection successful!", client.version)
+# except Exception as e:
+#     print("Connection failed!")
 
 
 @app.get("/")
@@ -73,6 +74,7 @@ def post_paper(pdf_request: PDFRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
 @app.patch("/api/paper/{paper_id}")
 def patch_paper(paper_id: int, paper_patch_request: PaperPatchRequest):
     try:
@@ -89,6 +91,21 @@ def patch_paper(paper_id: int, paper_patch_request: PaperPatchRequest):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/chat")
+def get_chat():
+    return {"data": get_chat_list()}
+
+
+@app.get("/api/chat/{chat_id}")
+def get_chat_history(chat_id: int):
+    chat_path = f"./chat/{chat_id}/chat.json"
+    if not os.path.exists(chat_path):
+        raise HTTPException(status_code=404, detail="Chat not found")
+    with open(chat_path, "r") as f:
+        chat_log = json.load(f)
+        return {"data": chat_log}
 
 
 @app.post("/api/chat")
@@ -111,7 +128,6 @@ def get_image(paper_id: int, image_name: str):
     return FileResponse(image_path)
 
 
-
 @app.get("/api/mark/{paper_id}")
 def get_mark(paper_id: int):
     mark_path = f"./mark/{paper_id}.json"
@@ -121,6 +137,7 @@ def get_mark(paper_id: int):
         st = f.read()
         js = json.loads(st)
         return js
+
 
 @app.get("/api/mark")
 def get_all_mark():
@@ -133,6 +150,7 @@ def get_all_mark():
             js = json.loads(st)
             mark_list += js
     return mark_list
+
 
 @app.post("/api/mark/{paper_id}")
 def post_mark(paper_id: int, mark_request: MarkRequest):

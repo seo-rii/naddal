@@ -85,7 +85,7 @@ def get_or_create_chat_log(chat_id: int, question: str) -> dict:
 
     chat_log = {
         "metadata": {
-            "chat_id": chat_id,
+            "id": chat_id,
             "title": title,
         },
         "chat": [],
