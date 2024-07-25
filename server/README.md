@@ -1,4 +1,14 @@
 # 논문 API
+- [x] GET /paper
+- [x] POST /paper
+- [x] PATCH /paper/:id
+- [x] GET /paper/:id
+- [ ] POST /paper/:id/kor
+- [x] GET /chat
+- [x] GET /chat/:id
+- [x] POST /chat
+- [x] GET /mark
+- [x] PATCH /mark
 ## GET /paper Done
 
 paper 목록 리턴
@@ -18,11 +28,11 @@ paper 목록 리턴
 }
 ```
 
-## POST /paper Done
+## [] POST /paper Done
 
 pdf base64로 업로드
 
-## PATCH /paper/:id
+## [] PATCH /paper/:id
 paper HTML 수정
 
 ## GET /paper/:id Done
