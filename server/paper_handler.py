@@ -1,5 +1,5 @@
 import base64
-import codecs
+import json
 import os
 from typing import Union
 
@@ -76,8 +76,46 @@ def upload_pdf(pdf_request: PDFRequest, client):
     }
 
 
+def get_or_create_chat_log(chat_id: int, question: str) -> dict:
+    CHATDIR = f"./chat/{chat_id}"
+    if not os.path.exists(CHATDIR):
+        os.makedirs(CHATDIR)
+
+    title = question[:10] + "..." if len(question) > 10 else question
+
+    chat_log = {
+        "metadata": {
+            "id": chat_id,
+            "title": title,
+        },
+        "chat": [],
+    }
+
+    chat_dir = os.path.join(CHATDIR, "chat.json")
+    if not os.path.exists(chat_dir):
+        with open(chat_dir, "w") as f:
+            json.dump(chat_log, f, indent=4)
+
+    with open(chat_dir, "r") as f:
+        chat_log = json.load(f)
+
+    return chat_log
+
+
+def update(chat_log: dict, chat_id: int, question: str, inference_result: str):
+    chat_log["chat"].append({"user": question, "model": inference_result})
+    CHATDIR = f"./chat/{chat_id}"
+    chat_log_path = os.path.join(CHATDIR, "chat.json")
+    with open(chat_log_path, "w") as f:
+        json.dump(chat_log, f, indent=4)
+
+
 def chat(chat_request: ChatRequest):
+    chat_id = chat_request.id
     question = chat_request.body
+    chat_log = get_or_create_chat_log(chat_id, question)
     target_ids = [f"id{id}" for id in chat_request.refer]
-    inference_result = inference(question=question, embedding_names=target_ids)
+    # inference_result = inference(question=question, embedding_names=target_ids)
+    inference_result = "This is model's response"
+    update(chat_log, chat_id, question, inference_result)
     return inference_result
