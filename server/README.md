@@ -79,6 +79,30 @@ response
   ]
 }
 ```
+
+## GET /chat/:id
+
+채팅 기록 반환
+response
+```json
+{
+  "data": {
+    "metadata": {
+      "id": 1,
+      "title": "chat1"
+    },
+    "chat": [
+      {
+        "user": "question",
+        "model": "answer"
+      },
+      {
+        "user": "question2",
+        "model": "answer2"
+      }
+    ]
+  }
+}
 ## POST /chat
 
 AI 응답
