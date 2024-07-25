@@ -155,4 +155,5 @@ dmypy.json
 cython_debug/
 
 uploads/
+chat/
 .DS_Store
