@@ -4,6 +4,8 @@
     import {selectFile} from "$utils/file";
     import newSnack from "$utils/snack";
     import {refresh} from "$utils/api";
+    import {browser} from "$app/environment";
+    import {onMount} from "svelte";
 
     async function upload() {
         const {name, blob} = await selectFile();
@@ -50,7 +52,7 @@
     <h1>최근 논문</h1>
     <Provider api="paper" let:data block="12">
         <div class="list">
-            {#each data.list as item}
+            {#each data.list || [] as item}
                 <a href="/view/{item.id}">
                     <Card outlined ripple>
                         <p style="margin: 0">{item.title}</p>

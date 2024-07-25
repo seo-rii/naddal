@@ -61,6 +61,48 @@ paper 번역
 }
 ```
 # 챗봇 API
+## GET /chat
+
+채팅 목록 반환
+response
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "chat1"
+    },
+    {
+      "id": 2,
+      "title": "chat2"
+    }
+  ]
+}
+```
+
+## GET /chat/:id
+
+채팅 기록 반환
+response
+```json
+{
+  "data": {
+    "metadata": {
+      "id": 1,
+      "title": "chat1"
+    },
+    "chat": [
+      {
+        "user": "question",
+        "model": "answer"
+      },
+      {
+        "user": "question2",
+        "model": "answer2"
+      }
+    ]
+  }
+}
 ## POST /chat
 
 AI 응답
@@ -68,6 +110,7 @@ AI 응답
 request
 ```json
 {
+  "id": 1
   "body": "user request",
   "refer": [1, 2, 3]
 }

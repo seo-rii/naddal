@@ -6,13 +6,14 @@
     // @ts-ignore
     import {v4 as uuid} from "uuid";
     import api from "$utils/api";
+    import {Button, Card, IconButton} from "nunui";
 
     export let data;
 
     let editable = false;
 
     let raw = '', _raw = '', container, editor, marks = [];
-    let result: Section[] = [];
+    let result: Section[] = [], title;
 
     type Section = {
         title: string;
@@ -56,10 +57,20 @@
         const intv = setInterval(() => {
             if (lock < Date.now()) parseSection(container);
         }, 1000);
+        const intv2 = setInterval(() => {
+            const _sel = window.getSelection().toString();
+            if (_sel) {
+                sel = _sel;
+            }
+        }, 100)
         api('/api/paper/' + data.id).then((data) => {
             raw = _raw = data.raw;
+            window.title = data.title;
         });
-        return () => clearInterval(intv);
+        return () => {
+            clearInterval(intv);
+            clearInterval(intv2);
+        }
     })
 
     async function update(raw) {
@@ -87,6 +98,29 @@
         let _ = scrollY;
         lock = Date.now() + 100;
     }
+
+    let showTranslation = false, translation = '', sel = null;
+
+    async function translate() {
+        showTranslation = true;
+        translation = '번역하는 중...'
+        translation = (await api('/api/translation', {raw: sel})).raw;
+    }
+
+    async function ask() {
+        window.ask = sel + '에 대해서 설명해 줘.';
+    }
+
+    let cont: HTMLElement;
+    $: if (cont) {
+        const intv = setInterval(() => {
+            const rect = cont && cont.getBoundingClientRect();
+            if (!rect || rect.height === 0) {
+                clearInterval(intv);
+                showTranslation = false;
+            }
+        })
+    }
 </script>
 
 <svelte:window bind:scrollY/>
@@ -94,7 +128,22 @@
 
 <main bind:this={container}>
     {#if raw}
-        <TipTap bind:body={raw} mark {editable}/>
+        <TipTap bind:body={raw} mark {editable} bubbleOverride={showTranslation}>
+            <svelte:fragment slot="bubble">
+                <IconButton icon="translate" size="small" on:click={translate}/>
+                <IconButton icon="question_mark" size="small" on:click={ask}/>
+            </svelte:fragment>
+            <svelte:fragment slot="bubbleOverride">
+                <div bind:this={cont} style:min-height="1px"></div>
+                <div>
+                    <Card primary flat>{sel}</Card>
+                    <Card secondary flat>{translation}</Card>
+                </div>
+                <div>
+                    <Button small outlined on:click={() => showTranslation = false}>닫기</Button>
+                </div>
+            </svelte:fragment>
+        </TipTap>
     {/if}
 </main>
 
