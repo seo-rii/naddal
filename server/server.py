@@ -2,6 +2,9 @@ import base64
 import os
 from typing import Union, List
 
+from langchain_community.document_loaders import ArxivLoader
+import requests
+
 from dotenv import load_dotenv
 import oracledb
 from utils import inference
@@ -73,6 +76,25 @@ def post_paper(pdf_request: PDFRequest):
     try:
         result = upload_pdf(pdf_request, client)
         return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+@app.post("/api/arxiv/{paper_id}")
+def post_arxiv_paper(paper_id: str):
+    try:
+        loader = ArxivLoader(
+            query=paper_id,
+            load_max_docs=1,
+            load_all_available_meta=True,
+        )
+        docs = loader.load()
+        url = docs[0].metadata['links'][1]
+        pdfFile = requests.get(url, allow_redirects=True).content
+        # name, pdffile base64 encode
+        pdf_request = PDFRequest(file_name=paper_id, file_data=base64.b64encode(pdfFile))
+        result = upload_pdf(pdf_request, client)
+        return result
+    
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
