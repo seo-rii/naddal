@@ -60,9 +60,13 @@ def generate_embeddings(docs: List[Document], embedding_name, client):
     Generate Embeddings for the given pdf, return 1 if success otherwise return 0
     """
     # split text into text chunks
-    text_spliiter = RecursiveCharacterTextSplitter.from_language(
-        chunk_size=1000, chunk_overlap=100, language=Language.HTML
+    text_spliiter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=100
     )
+    # text_spliiter = RecursiveCharacterTextSplitter.from_language(
+    #     chunk_size=1000, chunk_overlap=100, language=Language.HTML
+    # )
     splits = text_spliiter.split_documents(docs)
     for split in splits:
         split.page_content = tag_remover(split.page_content)
