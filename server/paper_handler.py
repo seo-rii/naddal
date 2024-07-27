@@ -43,7 +43,7 @@ def get_paper_by_id(paper_id: int, save_path: str = "./uploads") -> Union[dict, 
     return None
 
 
-def upload_pdf(pdf_request: PDFRequest, client):
+def upload_pdf(pdf_request: PDFRequest, pc):
     # Decode the base64 file data
     file_data = base64.b64decode(pdf_request.file_data)
 
@@ -63,7 +63,7 @@ def upload_pdf(pdf_request: PDFRequest, client):
 
     # Gen embedding
     generate_embeddings(
-        docs=docs, embedding_name=str(id), client=client
+        docs=docs, embedding_name=str(id), pc=pc
     )  # TODO: Merge generate embeddings
     # Remove the PDF file
     os.remove(file_path)

@@ -19,6 +19,8 @@ from fastapi.responses import FileResponse
 import json
 from translation import translation
 
+from pinecone import Pinecone
+
 app = FastAPI()
 load_dotenv(".env")
 
@@ -31,15 +33,7 @@ app.add_middleware(
 )
 
 api_key = os.getenv("UPSTAGE_API_KEY")
-username = os.getenv("DB_USER")
-password = os.getenv("DB_PASSWORD")
-dsn = os.getenv("DSN")
-
-# try:
-#     client = oracledb.connect(user=username, password=password, dsn=dsn)
-#     print("Connection successful!", client.version)
-# except Exception as e:
-#     print("Connection failed!")
+pc = Pinecone(api_key=os.getenv('PINECONE_API_KEY'))
 
 
 @app.get("/")
@@ -74,7 +68,7 @@ def get_paper(paper_id: str):
 @app.post("/api/paper")
 def post_paper(pdf_request: PDFRequest):
     try:
-        result = upload_pdf(pdf_request, client)
+        result = upload_pdf(pdf_request, pc)
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -92,7 +86,7 @@ def post_arxiv_paper(paper_id: str):
         pdfFile = requests.get(url, allow_redirects=True).content
         # name, pdffile base64 encode
         pdf_request = PDFRequest(file_name=paper_id, file_data=base64.b64encode(pdfFile))
-        result = upload_pdf(pdf_request, client)
+        result = upload_pdf(pdf_request, pc)
         return result
     
     except Exception as e:

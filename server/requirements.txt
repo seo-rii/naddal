@@ -11,3 +11,5 @@ langchain-core
 langchain-text-splitters
 oracledb
 arxiv
+tavily-python
+langchain-pinecone
