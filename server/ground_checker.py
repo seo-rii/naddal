@@ -23,13 +23,11 @@ def groundness_check(context, answer):
 def pass_answer(thres, chain, icl_examples, question, context):
 
     for i in range(thres):
-        output = chain.invoke(
-            {"icl_examples": icl_examples, "question": question, "context": context}
-        )
-        answer = output.content
+        output = chain.invoke(question, icl_examples, context)
+        
         # answer = "penguin is so cute"
-        if groundness_check(context, answer):
-            return True, answer
+        if groundness_check(context, output):
+            return True, output
 
     return (
         False,

@@ -1,7 +1,6 @@
 import os
 from typing import List
 from dotenv import load_dotenv, find_dotenv
-from langchain_chroma import Chroma
 from langchain_upstage import UpstageEmbeddings
 from langchain_upstage import UpstageLayoutAnalysisLoader
 from langchain.docstore.document import Document
@@ -10,16 +9,18 @@ from langchain.prompts import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
     SystemMessagePromptTemplate,
+    MessagesPlaceholder
 )
+from langchain.memory import ConversationBufferWindowMemory
 from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
+from langchain_pinecone import PineconeVectorStore
+from pinecone import ServerlessSpec
 import re
 
 from ground_checker import pass_answer
 from smart_rag import smart_rag
 
-import oracledb
-from langchain_community.vectorstores.oraclevs import OracleVS
-from langchain_community.vectorstores.utils import DistanceStrategy
+
 
 
 def tag_remover(html_content: str) -> str:
@@ -55,7 +56,7 @@ References
 
 
 # generate function for generate embedding
-def generate_embeddings(docs: List[Document], embedding_name, client):
+def generate_embeddings(docs: List[Document], embedding_name, pc):
     """
     Generate Embeddings for the given pdf, return 1 if success otherwise return 0
     """
@@ -75,22 +76,23 @@ def generate_embeddings(docs: List[Document], embedding_name, client):
         if split not in unique_splits and split.page_content != "":
             unique_splits.append(split)
 
-    knowledge_base = OracleVS.from_documents(
-        unique_splits,
-        UpstageEmbeddings(
-            model="solar-embedding-1-large", api_key=os.environ["UPSTAGE_API_KEY"]
-        ),
-        client=client,
-        table_name=f"id{embedding_name}",
-        distance_strategy=DistanceStrategy.DOT_PRODUCT,
+    pc.create_index(
+        name=f'{embedding_name}',
+        dimension=4096,
+        spec=ServerlessSpec(cloud='aws', region='us-east-1'),
+        metric='cosine'
+    )
+
+    PineconeVectorStore.from_documents(
+        unique_splits, 
+        UpstageEmbeddings(model='solar-embedding-1-large'), 
+        index_name=f'{embedding_name}'
     )
 
     print(
-        f"""embedding saved in oracledb \n
+        f"""embedding saved in pinecone \n
                 table name: id{embedding_name}"""
     )
-
-    return knowledge_base
 
 
 def inference(question, embedding_names):
@@ -103,26 +105,14 @@ def inference(question, embedding_names):
     load_dotenv(find_dotenv())
     api_key = os.getenv("UPSTAGE_API_KEY")
 
-    username = os.getenv("DB_USER")
-    password = os.getenv("DB_PASSWORD")
-    dsn = os.getenv("DSN")
-
-    try:
-        conn23c = oracledb.connect(user=username, password=password, dsn=dsn)
-        print("Connection successful!", conn23c.version)
-    except Exception as e:
-        print("Connection failed!")
-
     def retrieve(retriever, input_query):
-        return retriever.invoke(input_query)
+        return retriever.similarity_search(input_query)
 
     def get_retriever(embedding_name):
-        return OracleVS(
-            client=conn23c,
-            embedding_function=UpstageEmbeddings(model="solar-embedding-1-large"),
-            table_name=f"{embedding_name}",
-            distance_strategy=DistanceStrategy.DOT_PRODUCT,
-        ).as_retriever()
+        return PineconeVectorStore(
+            index_name=f'{embedding_name}', 
+            embedding=UpstageEmbeddings(model='solar-embedding-1-large')
+        )
 
     print("[[LOADING EMBEDDINGS...]]")
     # accumulate retrivers into a single list
@@ -170,8 +160,19 @@ def inference(question, embedding_names):
         "Context: {context}"
         "[Output start]\n"
     )
-    chat_prompt = ChatPromptTemplate.from_messages([system_msg, human_msg])
+    chat_prompt = ChatPromptTemplate.from_messages(
+        [system_msg, 
+         MessagesPlaceholder(variable_name='chat_history'),
+         human_msg]
+    )
     model = ChatUpstage(api_key=api_key)
+
+    memory = ConversationBufferWindowMemory(
+        return_messages=True,
+        k=4,    # 몇개 메세지 저장할 것인지
+        memory_key='chat_history'
+    )
+
     chain = chat_prompt | model
     truth, output = pass_answer(3, chain, icl_examples, question, context)
     if not truth:
