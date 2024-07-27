@@ -28,11 +28,11 @@ paper 목록 리턴
 }
 ```
 
-## [] POST /paper Done
+## POST /paper Done
 
 pdf base64로 업로드
 
-## [] PATCH /paper/:id
+## PATCH /paper/:id
 paper HTML 수정
 
 ## GET /paper/:id Done
@@ -162,7 +162,7 @@ response
 
 id번 논문 마킹 수정(없으면 생성)
 
-reqest
+request
 ```json
 {
   "mark": [
