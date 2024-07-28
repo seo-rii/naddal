@@ -10,4 +10,4 @@ RUN mkdir -p /app/uploads /app/mark
 
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-ENTRYPOINT [ "/app/run.sh" ]
+ENTRYPOINT [ "sh", "/app/run.sh" ]
