@@ -3,7 +3,7 @@ import {tick} from "svelte";
 //@ts-ignore
 import {get_current_component} from "svelte/internal";
 
-export const endpoint = import.meta.env.DEV ? 'http://localhost:8000' : 'https://test.com'
+export const endpoint = import.meta.env.DEV ? 'http://localhost:8000' : 'https://api-naddal.seorii.page'
 
 export default function api(path: string, data: any = undefined, method = 'POST'): Promise<any> {
     if (!browser) return new Promise<{ data: any }>(() => null)
