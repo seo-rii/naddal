@@ -19,8 +19,7 @@ import re
 
 from ground_checker import pass_answer
 from smart_rag import smart_rag
-
-
+from chain import MyconversationChain
 
 
 def tag_remover(html_content: str) -> str:
@@ -187,7 +186,8 @@ def inference(question, embedding_names):
         memory_key='chat_history'
     )
 
-    chain = chat_prompt | model
+    chain = MyconversationChain(model, chat_prompt, memory)
+    
     truth, output = pass_answer(3, chain, icl_examples, question, context)
     if not truth:
         return (
