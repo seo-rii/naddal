@@ -83,7 +83,7 @@ def generate_embeddings(docs: List[Document], embedding_name, pc):
         metric='cosine'
     )
 
-    PineconeVectorStore.from_documents(
+    knowledge_base = PineconeVectorStore.from_documents(
         unique_splits, 
         UpstageEmbeddings(model='solar-embedding-1-large'), 
         index_name=f'{embedding_name}'
@@ -94,6 +94,20 @@ def generate_embeddings(docs: List[Document], embedding_name, pc):
                 table name: id{embedding_name}"""
     )
 
+    return knowledge_base
+    
+
+def reembed_paper(html_content: str, paper_id: str, client):
+    """
+    Re-embed the paper based on the updated HTML content.
+    """
+    # Create Document object from the HTML content
+    doc = Document(page_content=html_content)
+
+    # Generate embeddings with the new content
+    knowledge_base = generate_embeddings([doc], embedding_name=paper_id, client=client)
+
+    return knowledge_base
 
 def inference(question, embedding_names):
     """
