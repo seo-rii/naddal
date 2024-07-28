@@ -22,7 +22,7 @@ from translation import translation
 from pinecone import Pinecone
 
 
-from utils import reembed_paper # reembed_paper 함수 가져오기
+# from utils import reembed_paper # reembed_paper 함수 가져오기
 
 app = FastAPI()
 load_dotenv(".env")
@@ -109,7 +109,7 @@ def patch_paper(paper_id: int, paper_patch_request: PaperPatchRequest):
         with open(file_path, "w") as f:
             f.write(paper_patch_request.raw)
             
-        reembed_paper(paper_patch_request.raw, str(paper_id), pc) # JHJ
+        # reembed_paper(paper_patch_request.raw, str(paper_id), pc) # JHJ
         
         return {"data": "success"}
 

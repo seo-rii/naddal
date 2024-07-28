@@ -82,7 +82,7 @@ def generate_embeddings(docs: List[Document], embedding_name, pc):
         metric='cosine'
     )
 
-    knowledge_base = PineconeVectorStore.from_documents(
+    PineconeVectorStore.from_documents(
         unique_splits, 
         UpstageEmbeddings(model='solar-embedding-1-large'), 
         index_name=f'{embedding_name}'
@@ -93,20 +93,6 @@ def generate_embeddings(docs: List[Document], embedding_name, pc):
                 table name: id{embedding_name}"""
     )
 
-    return knowledge_base
-    
-
-def reembed_paper(html_content: str, paper_id: str, client):
-    """
-    Re-embed the paper based on the updated HTML content.
-    """
-    # Create Document object from the HTML content
-    doc = Document(page_content=html_content)
-
-    # Generate embeddings with the new content
-    knowledge_base = generate_embeddings([doc], embedding_name=paper_id, client=client)
-
-    return knowledge_base
 
 def inference(question, embedding_names):
     """
@@ -173,21 +159,24 @@ def inference(question, embedding_names):
         "Context: {context}"
         "[Output start]\n"
     )
+    # chat_prompt = ChatPromptTemplate.from_messages(
+    #     [system_msg, 
+    #      MessagesPlaceholder(variable_name='chat_history'),
+    #      human_msg]
+    # )
     chat_prompt = ChatPromptTemplate.from_messages(
-        [system_msg, 
-         MessagesPlaceholder(variable_name='chat_history'),
+        [system_msg,
          human_msg]
     )
     model = ChatUpstage(api_key=api_key)
 
-    memory = ConversationBufferWindowMemory(
-        return_messages=True,
-        k=4,    # 몇개 메세지 저장할 것인지
-        memory_key='chat_history'
-    )
+    # memory = ConversationBufferWindowMemory(
+    #     return_messages=True,
+    #     k=4,    # 몇개 메세지 저장할 것인지
+    #     memory_key='chat_history'
+    # )
 
-    chain = MyconversationChain(model, chat_prompt, memory)
-    
+    chain = chat_prompt | model
     truth, output = pass_answer(3, chain, icl_examples, question, context)
     if not truth:
         return (

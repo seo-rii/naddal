@@ -114,8 +114,9 @@ def chat(chat_request: ChatRequest):
     chat_id = chat_request.id
     question = chat_request.body
     chat_log = get_or_create_chat_log(chat_id, question)
-    target_ids = [f"id{id}" for id in chat_request.refer]
+    # target_ids = [f"id{id}" for id in chat_request.refer]
     # inference_result = inference(question=question, embedding_names=target_ids)
-    inference_result = "This is model's response"
-    update(chat_log, chat_id, question, inference_result)
+    inference_result = inference(question=question, embedding_names=[0])# print
+    # inference_result = "This is model's response"
+    # update(chat_log, chat_id, question, inference_result)
     return inference_result

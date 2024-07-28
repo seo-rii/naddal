@@ -7,6 +7,7 @@
 
     async function getAnswer(question: string): Promise<string> {
         return (await api('/api/chat', {
+            id: 0, // sample id
             refer: [],
             body: (title ? `${title} 논문을 특히 참고하여 대답해 줘. ` : '') + question,
         })) || '답변이 없어요.';
