@@ -1,14 +1,16 @@
 <script lang="ts">
-    import {Button, CircularProgress, Icon, Input} from "nunui";
+    import {Button, CircularProgress, Icon, Input, List, OneLine, Option, Paper, Select} from "nunui";
     import Expand from "$lib/Expand.svelte";
     import {onMount, tick} from "svelte";
     import api from "$utils/api";
     import {browser} from "$app/environment";
+    import Provider from "$lib/Provider.svelte";
 
     async function getAnswer(question: string): Promise<string> {
         return (await api('/api/chat', {
-            refer: [],
+            refer: refer.map(i => +i.id).filter(x => x),
             body: (title ? `${title} 논문을 특히 참고하여 대답해 줘. ` : '') + question,
+            id: Date.now(),
         })) || '답변이 없어요.';
     }
 
@@ -35,7 +37,7 @@
     }
 
     let focus = false, value = '', showHistory = false, container: HTMLElement;
-    let history = [];
+    let history = [], refer = [];
     let clientHeight, title;
 
     $: {
@@ -53,24 +55,44 @@
             title = window.title;
         }, 100);
     })
+
+    function toggleRefer(id) {
+        return () => {
+            if (refer.includes(id)) refer = refer.filter(i => i !== id);
+            else refer = [...refer, id];
+        }
+    }
 </script>
 
 <div style:height="{clientHeight + 12}px"></div>
 <main bind:clientHeight>
     <Expand>
         {#if true}
-            <div class="row" style="padding-bottom: 0">
-                <div style="width: 24px"></div>
-                <Button small outlined>
-                    {#if title}
-                        {title} 논문 위주 참고
-                    {:else}
-                        전체 파일 참고
-                    {/if}
-                </Button>
-                <Button small outlined={!showHistory} on:click={() => showHistory = !showHistory} icon="history">대화 내역
-                </Button>
-            </div>
+            <Provider api="paper" let:data>
+                <div class="row" style="padding-bottom: 0">
+                    <div style="width: 24px"></div>
+                    <Paper left xstack top>
+                        <Button small outlined slot="target">
+                            {#if refer?.length}
+                                {refer.length}개 논문 참고
+                            {:else if title}
+                                {title} 논문 위주 참고
+                            {:else}
+                                전체 파일 참고
+                            {/if}
+                        </Button>
+                        <div style="padding: 12px">참고할 목록</div>
+                        <List multiple bind:selected={refer}>
+                            {#each data.list || [] as item}
+                                <OneLine title={item.title} on:click={toggleRefer(item)} active={refer.includes(item)}/>
+                            {/each}
+                        </List>
+                    </Paper>
+                    <Button small outlined={!showHistory} on:click={() => showHistory = !showHistory} icon="history">대화
+                        내역
+                    </Button>
+                </div>
+            </Provider>
         {/if}
     </Expand>
     <Expand>
