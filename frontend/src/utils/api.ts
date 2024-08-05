@@ -25,7 +25,6 @@ export default function api(path: string, data: any = undefined, method = 'POST'
         })
     return new Promise(async (resolve, reject) => {
         fetch(endpoint + path, {
-            credentials: 'include',
             method: data ? method : 'GET',
             body: data ? JSON.stringify(data) : undefined,
             redirect: 'follow',
