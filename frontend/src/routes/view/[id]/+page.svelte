@@ -154,7 +154,7 @@
       max-width: 100%;
     }
 
-    :global(br) {
+    :global(h1 br) {
       display: none;
     }
 
