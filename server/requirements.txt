@@ -13,3 +13,4 @@ oracledb
 arxiv
 tavily-python
 langchain-pinecone
+pypdf[image]
