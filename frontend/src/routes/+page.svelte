@@ -81,7 +81,7 @@
 
   a {
     text-decoration: none;
-    color: initial;
+    color: var(--on-surface);
   }
 
   p {

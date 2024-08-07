@@ -20,6 +20,6 @@
 <style lang="scss">
   a {
     text-decoration: none;
-    color: inherit;
+    color: var(--on-surface);
   }
 </style>
