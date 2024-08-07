@@ -128,7 +128,8 @@
 
 <main bind:this={container}>
     {#if raw}
-        <TipTap bind:body={raw} mark {editable} bubbleOverride={showTranslation} sanitize={{allowedTags: [], allowedAttributes: {}}}>
+        <TipTap bind:body={raw} mark {editable} bubbleOverride={showTranslation}
+                sanitize={{allowedTags: [], allowedAttributes: {}}}>
             <svelte:fragment slot="bubble">
                 <IconButton icon="translate" size="small" on:click={translate}/>
                 <IconButton icon="question_mark" size="small" on:click={ask}/>
@@ -151,6 +152,10 @@
   main {
     :global(*) {
       max-width: 100%;
+    }
+
+    :global(br) {
+      display: none;
     }
 
     :global(h1) {
