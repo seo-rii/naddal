@@ -7,9 +7,10 @@
     import Provider from "$lib/Provider.svelte";
 
     async function getAnswer(question: string): Promise<string> {
+        const view = refer.length ? refer : total
         return (await api('/api/chat', {
-            refer: refer.map(i => +i.id).filter(x => x),
-            body: (title ? `${title} 논문을 특히 참고하여 대답해 줘. ` : '') + question,
+            refer: view.map(i => +i.id).filter(x => x),
+            body: `${view?.map(i => i.title)?.join(', ')} 논문을 특히 참고하여 대답해 줘. \n` + question,
             id: Date.now(),
         })) || '답변이 없어요.';
     }
@@ -38,7 +39,7 @@
 
     let focus = false, value = '', showHistory = false, container: HTMLElement;
     let history = [], refer = [];
-    let clientHeight, title, id;
+    let clientHeight, id, total;
 
     $: refer = id ? [id] : [];
     $: {
@@ -55,7 +56,6 @@
             }
             if (id !== window.id) {
                 id = window.id;
-                title = window.id?.title;
             }
         }, 100);
     })
@@ -72,15 +72,13 @@
 <main bind:clientHeight>
     <Expand>
         {#if true}
-            <Provider api="paper" let:data>
+            <Provider api="paper" on:load={e => total = e.detail?.list} let:data>
                 <div class="row" style="padding-bottom: 0">
                     <div style="width: 24px"></div>
                     <Paper left xstack top>
                         <Button small outlined slot="target" style="margin-right: 4px">
                             {#if refer?.length}
                                 {refer.length}개 논문 참고
-                            {:else if title}
-                                {title} 논문 위주 참고
                             {:else}
                                 전체 파일 참고
                             {/if}

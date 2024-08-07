@@ -158,6 +158,10 @@
       display: none;
     }
 
+    :global(h2 br) {
+      display: none;
+    }
+
     :global(h1) {
       position: sticky;
       top: 0;
