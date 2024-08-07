@@ -53,7 +53,10 @@
                 window.ask = '';
                 ask();
             }
-            if (id !== window.id) id = window.id;
+            if (id !== window.id) {
+                id = window.id;
+                title = window.id?.title;
+            }
         }, 100);
     })
 
