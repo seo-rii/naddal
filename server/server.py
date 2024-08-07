@@ -138,6 +138,7 @@ def post_chat(chat_request: ChatRequest):
         result = chat(chat_request=chat_request)
         return {"data": result}
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail=str(e))
 
 

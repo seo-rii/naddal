@@ -65,7 +65,7 @@
         }, 100)
         api('/api/paper/' + data.id).then((data) => {
             raw = _raw = data.raw;
-            window.title = data.title;
+            window.id = data;
         });
         return () => {
             clearInterval(intv);

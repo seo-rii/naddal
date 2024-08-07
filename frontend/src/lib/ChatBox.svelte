@@ -38,8 +38,9 @@
 
     let focus = false, value = '', showHistory = false, container: HTMLElement;
     let history = [], refer = [];
-    let clientHeight, title;
+    let clientHeight, title, id;
 
+    $: refer = id ? [id] : [];
     $: {
         let _ = [showHistory];
         scrollToBottom();
@@ -52,13 +53,13 @@
                 window.ask = '';
                 ask();
             }
-            title = window.title;
+            if (id !== window.id) id = window.id;
         }, 100);
     })
 
     function toggleRefer(id) {
         return () => {
-            if (refer.includes(id)) refer = refer.filter(i => i !== id);
+            if (refer.includes(id)) refer = refer.filter(i => i.id !== id.id);
             else refer = [...refer, id];
         }
     }
@@ -72,7 +73,7 @@
                 <div class="row" style="padding-bottom: 0">
                     <div style="width: 24px"></div>
                     <Paper left xstack top>
-                        <Button small outlined slot="target">
+                        <Button small outlined slot="target" style="margin-right: 4px">
                             {#if refer?.length}
                                 {refer.length}개 논문 참고
                             {:else if title}
@@ -84,7 +85,8 @@
                         <div style="padding: 12px">참고할 목록</div>
                         <List multiple bind:selected={refer}>
                             {#each data.list || [] as item}
-                                <OneLine title={item.title} on:click={toggleRefer(item)} active={refer.includes(item)}/>
+                                <OneLine title={item.title} on:click={toggleRefer(item)}
+                                         active={refer.some(x => +x.id === +item.id)}/>
                             {/each}
                         </List>
                     </Paper>

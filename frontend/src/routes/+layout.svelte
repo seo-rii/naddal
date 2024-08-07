@@ -28,7 +28,7 @@
 
     $: if (browser) {
         let _ = $page.url.pathname;
-        window.title = '';
+        window.id = null;
     }
 </script>
 
