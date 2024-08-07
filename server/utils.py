@@ -131,9 +131,12 @@ def inference(question, embedding_names):
     # accumulate retrivers into a single list
     retrievers = []
     for name in embedding_names:
-        retriever = get_retriever(name)
-        # print(retriever)
-        retrievers.append((retriever, name))
+        try:
+            retriever = get_retriever(name)
+            # print(retriever)
+            retrievers.append((retriever, name))
+        except Exception as e:
+            pass
     # generate documents
     print(retrievers)
     print("[[RETRIEVING RELEVANT DOCS...]]")

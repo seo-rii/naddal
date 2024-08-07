@@ -19,7 +19,7 @@ class MyconversationChain(Runnable):
             | StrOutputParser()
     )
     
-    def invoke(self, query, sample, context, configs=None, **kwargs):
+    def invoke(self, query, sample=None, context=None, configs=None, **kwargs):
         answer = self.chain.invoke({self.question_key: query, self.example_key: sample, self.context_key: context})
         self.memory.save_context(inputs={'human':query}, outputs={'ai':answer})
 
